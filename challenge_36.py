@@ -111,9 +111,9 @@ def step7(state):
 # S->C            
 # Send "OK" if HMAC-SHA256(K, salt) validates
 def validate(state):
-    expected = hmac(state["S_K"], state["salt"])
-    return expected == state["challenge"]
-
+    state["expected"] = hmac(state["S_K"], state["salt"])
+    print_state(state)
+    return state["expected"] == state["challenge"]
 
 def test_srp():
     state = init()
@@ -126,7 +126,12 @@ def test_srp():
     state = step7(state)
     return validate(state)
 
+def print_state(state):
+    for key, value in state.items():
+        print key + ": " + str(value)
+
 if __name__ == "__main__":
+
     if (test_srp()):
         print("Challenge 36 success")
     else:
